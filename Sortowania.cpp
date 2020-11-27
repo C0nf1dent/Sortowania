@@ -211,13 +211,13 @@ void selectionSort_demo(int list[], int length)
 		{
 			std::cout << (k <= sorted ? "\x1b[30;102m" : k == minindex ? "\x1b[30;103m" : "\x1b[37;100m") << list[k] << "\x1b[0m ";
 		}
-		std::cout << '\n';
+		std::cout << "\x1b[0m \n";
 		swap(list[sorted], list[minindex]);
 		for (int k = 0; k < length; k++)
 		{
 			std::cout << (k < sorted ? "\x1b[30;102m" : k == minindex or k == sorted ? "\x1b[30;103m" : "\x1b[37;100m") << list[k] << "\x1b[0m ";
 		}
-		std::cout << '\n';
+		std::cout << "\x1b[0m \n";
 
 		sorted += 1;
 	}
@@ -226,10 +226,11 @@ void selectionSort_demo(int list[], int length)
 	{
 		std::cout << "\x1b[30;102m" << list[k] << "\x1b[0m ";
 	}
+	std::cout << "\x1b[0m \n";
 
 }
 
-void quickSort_demo(int list[], int start, int end, int level, int gend, std::vector<std::string*>& qsort_vector)
+void quickSort_demo(int list[], int start, int end, int level, int gend, std::vector<std::string*>& qsort_vector, bool mode)
 {
 	if (level >= qsort_vector.size())
 		qsort_vector.push_back(new std::string[gend + 1]);
@@ -269,8 +270,8 @@ void quickSort_demo(int list[], int start, int end, int level, int gend, std::ve
 		qsort_vector[level][k] += "\x1b[0m ";
 	}
 
-	quickSort_demo(list, start, q - 1, level + 1, gend, qsort_vector);
-	quickSort_demo(list, q + 1, end, level + 1, gend, qsort_vector);
+	quickSort_demo(list, start, q - 1, level + 1, gend, qsort_vector, mode);
+	quickSort_demo(list, q + 1, end, level + 1, gend, qsort_vector, mode);
 
 	if (start == 0 and end == gend)
 	{
@@ -279,11 +280,11 @@ void quickSort_demo(int list[], int start, int end, int level, int gend, std::ve
 			for (int k = 0; k <= gend; k++)
 			{
 				if (qsort_vector[l][k] == "") {
-					qsort_vector[l][k] = qsort_vector[l - 1][k]/*"\x1b[0m   "*/;
+					qsort_vector[l][k] = mode ? "\x1b[0m   " : qsort_vector[l - 1][k];
 				}
 				std::cout << qsort_vector[l][k];
 			}
-			std::cout << std::endl;
+			std::cout << "\x1b[0m \n";
 		}
 	}
 }
@@ -296,10 +297,14 @@ int main()
 	srand(time(NULL));
 	int list[SIZE];
 
+	fillRandom(list, SIZE, 10, 99);
+	selectionSort_demo(list, SIZE);
+	system("pause");
+	system("cls");
 
 	fillRandom(list, SIZE, 10, 99);
 	std::vector<std::string*> qsort_vector;
-	quickSort_demo(list, 0, SIZE - 1, 0, SIZE - 1, qsort_vector);
+	quickSort_demo(list, 0, SIZE - 1, 0, SIZE - 1, qsort_vector, 1);
 	system("pause");
 	return 0;
 }
